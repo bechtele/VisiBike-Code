@@ -11,6 +11,7 @@
 
 bool readLeftTurnsignal();
 bool readRightTurnsignal();
+void turnSignalInit();
 
 //=====[#include guards - end]=================================================
 

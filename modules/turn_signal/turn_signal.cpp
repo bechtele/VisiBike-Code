@@ -6,10 +6,9 @@
 
 //=====[Declaration of private defines]========================================
 
-#define DEBOUNCE_BUTTON_TIME_MS 40 //ms to wait when the button state changes to confirm actual intention
+#define DEBOUNCE_TIME 30
+#define TIME_INCREMENT_MS 10 //ms to wait when the button state changes to confirm actual intention
 
-#define LEFT true
-#define RIGHT false
 //=====[Declaration of private data types]=====================================
 
 typedef enum {
@@ -21,14 +20,13 @@ typedef enum {
 
 //=====[Declaration and initialization of public global objects]===============
 
-DigitalIn leftTurnsignal(PD_14); //Make sure these are acceptable GPIO ports
-DigitalIn rightTurnsignal(PE_12);
+DigitalIn leftTurnSignal(PD_14); //Make sure these are acceptable GPIO ports
+DigitalIn rightTurnSignal(PE_12);
 
-buttonState_t buttonState = BUTTON_UP;
-//buttonState_t buttonStateRight = BUTTON_RELEASED;
+buttonState_t buttonStateLeft = BUTTON_UP;
+buttonState_t buttonStateRight = BUTTON_UP;
 
-bool outLeft = false;
-bool outRight = false;
+int timeElap = 0;
 
 //=====[Declaration of external public global variables]=======================
 
@@ -38,15 +36,112 @@ bool outRight = false;
 
 //=====[Declarations (prototypes) of private functions]========================
 
-static bool debounceInput();
+static bool debounceLeftInput();
+static bool debounceRightInput();
+
 
 //=====[Implementations of public functions]===================================
 
-bool readLeftTurnsignal(){ //Replace with FSM to debounce 
-    return debounceInput();
+bool readLeftTurnSignal(){ //Replace with FSM to debounce 
+    return debounceLeftInput();
+}
+
+bool readRightTurnSignal(){
+    return debounceRightInput();
+}
+
+void turnSignalInit(){
+    leftTurnSignal.mode(PullUp);
+    rightTurnSignal.mode(PullUp);
 }
 
 //=====[Implementations of private functions]==================================
 
-//VERSION 02
+static bool debounceLeftInput(){
+    bool enterButtonReleasedEvent = false;
+    switch( buttonStateLeft ) {
+
+    case BUTTON_UP:
+        if( leftTurnSignal ) {
+            buttonStateLeft = BUTTON_FALLING;
+            timeElap = 0;
+        }
+        break;
+
+    case BUTTON_FALLING:
+        if( timeElap >= DEBOUNCE_TIME ) {
+            if( leftTurnSignal ) {
+                buttonStateLeft = BUTTON_DOWN;
+            } else {
+                buttonStateLeft = BUTTON_UP;
+            }
+        }
+        timeElap = timeElap + TIME_INCREMENT_MS;
+        break;
+
+    case BUTTON_DOWN:
+        if( !leftTurnSignal ) {
+            buttonStateLeft = BUTTON_RISING;
+            timeElap = 0;
+        }
+        break;
+
+    case BUTTON_RISING:
+        if( timeElap >= DEBOUNCE_TIME ) {
+            if( !leftTurnSignal ) {
+                buttonStateLeft = BUTTON_UP;
+                enterButtonReleasedEvent = true;
+            } else {
+                buttonStateLeft = BUTTON_DOWN;
+            }
+        }
+        timeElap = timeElap + TIME_INCREMENT_MS;
+        break;
+    }
+    return enterButtonReleasedEvent;
+}
+
+static bool debounceRightInput(){
+    bool enterButtonReleasedEvent = false;
+    switch( buttonStateRight ) {
+
+    case BUTTON_UP:
+        if( leftTurnSignal ) {
+            buttonStateRight = BUTTON_FALLING;
+            timeElap = 0;
+        }
+        break;
+
+    case BUTTON_FALLING:
+        if( timeElap >= DEBOUNCE_TIME ) {
+            if( leftTurnSignal ) {
+                buttonStateRight = BUTTON_DOWN;
+            } else {
+                buttonStateRight = BUTTON_UP;
+            }
+        }
+        timeElap = timeElap + TIME_INCREMENT_MS;
+        break;
+
+    case BUTTON_DOWN:
+        if( !leftTurnSignal ) {
+            buttonStateRight = BUTTON_RISING;
+            timeElap = 0;
+        }
+        break;
+
+    case BUTTON_RISING:
+        if( timeElap >= DEBOUNCE_TIME ) {
+            if( !leftTurnSignal ) {
+                buttonStateRight = BUTTON_UP;
+                enterButtonReleasedEvent = true;
+            } else {
+                buttonStateRight = BUTTON_DOWN;
+            }
+        }
+        timeElap = timeElap + TIME_INCREMENT_MS;
+        break;
+    }
+    return enterButtonReleasedEvent;
+}
 
