@@ -23,39 +23,32 @@ DigitalOut turnsignalL(LED2);
 //=====[Declaration and initialization of private global variables]============
 
 //=====[Declarations (prototypes) of private functions]========================
-//INIT functions
-//static void displayInit();
-static void turnsignalInit();
+static void displaySystemInit();
 
-
-//UPDATE functions
 static void displayUpdate();
+static void turnSignalUpdate();
 
 //=====[Implementations of public functions]===================================
 
 void smartbikesystemInit(){
-    turnsignalInit();
-    //displayInit();
+    turnSignalInit();
+    displayInit();
 }
 
 void smartbikesystemUpdate(){
-    //displayUpdate();
-    if(readLeftTurnsignal()){
-        turnsignalL = !turnsignalL;
-    }
+    displayUpdate();
     
-
     delay(10);
 }
 
 //=====[Implementations of private functions]==================================
-static void turnsignalInit(){
-    turnsignalL = OFF;
+static void turnSignalUpdate(){
+
 }
 
-//static void displayInit(){
-    
-//}
+static void displaySystemInit(){
+
+}
 
 static void displayUpdate(){
 
