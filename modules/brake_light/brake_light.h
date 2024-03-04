@@ -9,8 +9,8 @@
 
 //=====[Declarations (prototypes) of public functions]=========================
 
-void brakelightInit();
-void brakelightUpdate();
+void brakeLightInit();
+bool brakeLightUpdate();
 
 //=====[#include guards - end]=================================================
 
