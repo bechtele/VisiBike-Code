@@ -9,9 +9,9 @@
 
 //=====[Declarations (prototypes) of public functions]=========================
 
-bool readLeftTurnsignal();
-bool readRightTurnsignal();
 void turnSignalInit();
+bool readLeftTurnSignal();
+bool readRightTurnSignal();
 
 //=====[#include guards - end]=================================================
 

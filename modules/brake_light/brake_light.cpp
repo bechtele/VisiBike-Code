@@ -25,7 +25,6 @@ void brakeLightInit() {
     rightBrakeButton.mode(PullUp);
 }
 
-
 bool brakeLightUpdate() {
     return leftBrakeButton || rightBrakeButton;
 }

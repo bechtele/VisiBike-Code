@@ -11,6 +11,7 @@
 
 void speedsensorInit();
 void speedsensorUpdate();
+int readSpeed();
 
 //=====[#include guards - end]=================================================
 
