@@ -8,6 +8,7 @@
 #include "speed_sensor.h"
 #include "turn_signal.h"
 #include "user_interface.h"
+#include "user_interface/user_interface.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -30,11 +31,11 @@
 
 void smartbikesystemInit(){
     turnSignalInit();
-    displaySystemInit();
+    userInterfaceInit();
 }
 
 void smartbikesystemUpdate(){
-    displayUpdate();
+    userInterfaceUpdate();
     
     delay(10);
 }

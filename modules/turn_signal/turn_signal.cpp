@@ -20,8 +20,8 @@ typedef enum {
 
 //=====[Declaration and initialization of public global objects]===============
 
-DigitalIn leftTurnSignal(PD_14); //Make sure these are acceptable GPIO ports
-DigitalIn rightTurnSignal(PE_12);
+DigitalIn leftTurnSignal(PG_1); //Make sure these are acceptable GPIO ports
+DigitalIn rightTurnSignal(PF_9);
 
 buttonState_t buttonStateLeft = BUTTON_UP;
 buttonState_t buttonStateRight = BUTTON_UP;
@@ -58,7 +58,7 @@ void turnSignalInit(){
 //=====[Implementations of private functions]==================================
 
 static bool debounceLeftInput(){
-    bool enterButtonReleasedEvent = false;
+    bool leftButtonReleasedEvent = false;
     switch( buttonStateLeft ) {
 
     case BUTTON_UP:
@@ -90,7 +90,7 @@ static bool debounceLeftInput(){
         if( timeElap >= DEBOUNCE_TIME ) {
             if( !leftTurnSignal ) {
                 buttonStateLeft = BUTTON_UP;
-                enterButtonReleasedEvent = true;
+                leftButtonReleasedEvent = true;
             } else {
                 buttonStateLeft = BUTTON_DOWN;
             }
@@ -98,11 +98,11 @@ static bool debounceLeftInput(){
         timeElap = timeElap + TIME_INCREMENT_MS;
         break;
     }
-    return enterButtonReleasedEvent;
+    return leftButtonReleasedEvent;
 }
 
 static bool debounceRightInput(){
-    bool enterButtonReleasedEvent = false;
+    bool rightButtonReleasedEvent = false;
     switch( buttonStateRight ) {
 
     case BUTTON_UP:
@@ -134,7 +134,7 @@ static bool debounceRightInput(){
         if( timeElap >= DEBOUNCE_TIME ) {
             if( !leftTurnSignal ) {
                 buttonStateRight = BUTTON_UP;
-                enterButtonReleasedEvent = true;
+                rightButtonReleasedEvent = true;
             } else {
                 buttonStateRight = BUTTON_DOWN;
             }
@@ -142,6 +142,6 @@ static bool debounceRightInput(){
         timeElap = timeElap + TIME_INCREMENT_MS;
         break;
     }
-    return enterButtonReleasedEvent;
+    return rightButtonReleasedEvent;
 }
 
