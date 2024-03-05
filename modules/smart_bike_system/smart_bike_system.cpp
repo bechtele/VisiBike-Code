@@ -30,14 +30,15 @@
 //=====[Implementations of public functions]===================================
 
 void smartbikesystemInit(){
+    displayInit();
     turnSignalInit();
     userInterfaceInit();
 }
 
 void smartbikesystemUpdate(){
     userInterfaceUpdate();
-    
-    delay(10);
+    turnSignalUpdate();
+    badTurnSignalDisplay();
 }
 
 //=====[Implementations of private functions]==================================

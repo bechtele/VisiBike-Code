@@ -3,11 +3,12 @@
 #include "turn_signal.h"
 #include "mbed.h"
 #include "arm_book_lib.h"
+#include "smart_bike_system.h"
 
 //=====[Declaration of private defines]========================================
 
 #define DEBOUNCE_TIME 30
-#define TIME_INCREMENT_MS 10 //ms to wait when the button state changes to confirm actual intention
+
 
 //=====[Declaration of private data types]=====================================
 
@@ -19,6 +20,7 @@ typedef enum {
 } buttonState_t;
 
 //=====[Declaration and initialization of public global objects]===============
+UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 DigitalIn leftTurnSignal(PG_1); //Make sure these are acceptable GPIO ports
 DigitalIn rightTurnSignal(PF_9);
@@ -26,13 +28,15 @@ DigitalIn rightTurnSignal(PF_9);
 buttonState_t buttonStateLeft = BUTTON_UP;
 buttonState_t buttonStateRight = BUTTON_UP;
 
-int timeElap = 0;
-
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
 
 //=====[Declaration and initialization of private global variables]============
+
+//only one should be true at any time
+bool leftBlinkerOn = false;
+bool rightBlinkerOn = false;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -40,31 +44,47 @@ static bool debounceLeftInput();
 static bool debounceRightInput();
 
 
+
 //=====[Implementations of public functions]===================================
 
 bool readLeftTurnSignal(){ //Replace with FSM to debounce 
-    return debounceLeftInput();
+    return leftBlinkerOn;
 }
 
 bool readRightTurnSignal(){
-    return debounceRightInput();
+    return rightBlinkerOn;
 }
 
 void turnSignalInit(){
-    leftTurnSignal.mode(PullUp);
-    rightTurnSignal.mode(PullUp);
+    leftTurnSignal.mode(PullDown);
+    rightTurnSignal.mode(PullDown);
+}
+
+void turnSignalUpdate() {
+    if (debounceLeftInput()) {
+        leftBlinkerOn = !leftBlinkerOn;
+        if (leftBlinkerOn == true) {
+            rightBlinkerOn = false;
+        }
+    }
+    if (debounceRightInput()) {
+        rightBlinkerOn = !rightBlinkerOn;
+        if (rightBlinkerOn == true) {
+            leftBlinkerOn = false;
+        }
+    }
 }
 
 //=====[Implementations of private functions]==================================
 
 static bool debounceLeftInput(){
     bool leftButtonReleasedEvent = false;
+    static int timeElap = 0;
     switch( buttonStateLeft ) {
 
     case BUTTON_UP:
         if( leftTurnSignal ) {
             buttonStateLeft = BUTTON_FALLING;
-            timeElap = 0;
         }
         break;
 
@@ -103,6 +123,7 @@ static bool debounceLeftInput(){
 
 static bool debounceRightInput(){
     bool rightButtonReleasedEvent = false;
+    static int timeElap = 0;
     switch( buttonStateRight ) {
 
     case BUTTON_UP:
@@ -145,3 +166,11 @@ static bool debounceRightInput(){
     return rightButtonReleasedEvent;
 }
 
+void badTurnSignalDisplay() {
+    if (leftTurnSignal) {
+        uartUsb.write("Left turn signal: true\n", 23);
+    }
+    if (rightTurnSignal) {
+        uartUsb.write("Right turn signal: true\n", 24);
+    }
+}
