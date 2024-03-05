@@ -20,14 +20,14 @@
 
 //=====[Declaration and initialization of public global variables]=============
 bool turnSignalLeftTracker = false;
-bool turnSignalRightTracker = true;
+bool turnSignalRightTracker = false;
 
 //=====[Declaration and initialization of private global variables]============
 
 
 //=====[Declarations (prototypes) of private functions]========================
 static void displaySystemInit();
-static void displaySystemUpdate();
+static void LCDUpdate();
 static void turnSignalUpdate();
 
 //=====[Implementations of public functions]===================================
@@ -37,7 +37,7 @@ void userInterfaceInit() {
 }
 
 void userInterfaceUpdate() {
-    displaySystemUpdate();
+    LCDUpdate();
     turnSignalUpdate();
 }
 
@@ -59,7 +59,7 @@ static void displaySystemInit(){
     displayStringWrite("BRK:");
 }
 
-static void displayUpdate(){
+static void LCDUpdate(){
     //Update Speed
     displayCharPositionWrite(7,0);
     displayStringWrite("99");
