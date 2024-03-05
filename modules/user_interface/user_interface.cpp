@@ -19,8 +19,6 @@
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
-bool turnSignalLeftTracker = false;
-bool turnSignalRightTracker = false;
 
 //=====[Declaration and initialization of private global variables]============
 
@@ -28,12 +26,12 @@ bool turnSignalRightTracker = false;
 //=====[Declarations (prototypes) of private functions]========================
 static void displaySystemInit();
 static void LCDUpdate();
-static void turnSignalUpdate();
+static void LCDInit();
 
 //=====[Implementations of public functions]===================================
 
 void userInterfaceInit() {
-    displaySystemInit();
+    LCDInit();
 }
 
 void userInterfaceUpdate() {
@@ -44,8 +42,7 @@ void userInterfaceUpdate() {
 
 //=====[Implementations of private functions]==================================
 
-static void displaySystemInit(){
-    displayInit();
+static void LCDInit(){
     //Position of SPEED: 
     displayCharPositionWrite(0,0);
     displayStringWrite("SPEED:   MPH");
@@ -66,10 +63,10 @@ static void LCDUpdate(){
 
     //Update Turn Signal
     displayCharPositionWrite(3,1);
-    if(turnSignalLeftTracker){
+    if(readLeftTurnSignal()){
         displayStringWrite("LEFT ");
     }
-    else if(turnSignalRightTracker){
+    else if(readRightTurnSignal()){
         displayStringWrite("RIGHT");
     } else {
         displayStringWrite("OFF  ");
@@ -85,15 +82,4 @@ static void LCDUpdate(){
         displayStringWrite("OFF");
     }
 
-}
-
-static void turnSignalUpdate(){
-    if(readLeftTurnSignal()){
-        turnSignalLeftTracker = !turnSignalLeftTracker;
-
-    }
-    if(readRightTurnSignal()){
-        turnSignalRightTracker = !turnSignalRightTracker;
-
-    }
 }
