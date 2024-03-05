@@ -7,6 +7,7 @@
 #include "brake_light.h"
 #include "speed_sensor.h"
 #include "turn_signal.h"
+#include "string.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -14,7 +15,8 @@
 
 //=====[Declaration and initialization of public global objects]===============
 
-DigitalOut turnsignalL(LED2);
+bool turnSignalLeftTracker = false;
+bool turnSignalRightTracker = true;
 
 //=====[Declaration of external public global variables]=======================
 
@@ -43,13 +45,54 @@ void smartbikesystemUpdate(){
 
 //=====[Implementations of private functions]==================================
 static void turnSignalUpdate(){
+    if(readLeftTurnSignal()){
+        turnSignalLeftTracker = !turnSignalLeftTracker;
 
+    }
+    if(readRightTurnSignal()){
+        turnSignalRightTracker = !turnSignalRightTracker;
+
+    }
 }
 
 static void displaySystemInit(){
+    displayInit();
+    //Position of SPEED: 
+    displayCharPositionWrite(0,0);
+    displayStringWrite("SPEED:   MPH");
 
+    //TURN SIGNAL
+    displayCharPositionWrite(0,1);
+    displayStringWrite("TS:");
+
+    //BRAKE
+    displayCharPositionWrite(9,0);
+    displayStringWrite("BRK:");
 }
 
 static void displayUpdate(){
+    //Update Speed
+    displayCharPositionWrite(7,0);
+    displayStringWrite("99");
+
+    //Update Turn Signal
+    displayCharPositionWrite(3,1);
+    displayStringWrite("OFF  ");
+    if(turnSignalLeftTracker){
+        displayStringWrite("LEFT ");
+    }
+    if(turnSignalRightTracker){
+        displayStringWrite("RIGHT");
+    }
+    //displayStringWrite()
+
+    //Update Brake
+    displayCharPositionWrite(13,1);
+    if(brakeLightUpdate()){
+        displayStringWrite("ON ");
+    }
+    else{
+        displayStringWrite("OFF");
+    }
 
 }
