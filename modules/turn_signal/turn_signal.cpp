@@ -20,7 +20,6 @@ typedef enum {
 } buttonState_t;
 
 //=====[Declaration and initialization of public global objects]===============
-UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 DigitalIn leftTurnSignal(PG_1); //Make sure these are acceptable GPIO ports
 DigitalIn rightTurnSignal(PF_9);
@@ -164,13 +163,4 @@ static bool debounceRightInput(){
         break;
     }
     return rightButtonReleasedEvent;
-}
-
-void badTurnSignalDisplay() {
-    if (leftTurnSignal) {
-        uartUsb.write("Left turn signal: true\n", 23);
-    }
-    if (rightTurnSignal) {
-        uartUsb.write("Right turn signal: true\n", 24);
-    }
 }
