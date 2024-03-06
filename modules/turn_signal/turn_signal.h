@@ -13,7 +13,6 @@ void turnSignalInit();
 void turnSignalUpdate();
 bool readLeftTurnSignal();
 bool readRightTurnSignal();
-void badTurnSignalDisplay();
 
 //=====[#include guards - end]=================================================
 

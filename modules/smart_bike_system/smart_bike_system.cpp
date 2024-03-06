@@ -33,12 +33,13 @@ void smartbikesystemInit(){
     displayInit();
     turnSignalInit();
     userInterfaceInit();
+    speedSensorInit();
 }
 
 void smartbikesystemUpdate(){
     userInterfaceUpdate();
     turnSignalUpdate();
-    badTurnSignalDisplay();
+    speedSensorUpdate();
 }
 
 //=====[Implementations of private functions]==================================

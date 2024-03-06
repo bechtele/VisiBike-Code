@@ -9,8 +9,8 @@
 
 //=====[Declarations (prototypes) of public functions]=========================
 
-void speedsensorInit();
-void speedsensorUpdate();
+void speedSensorInit();
+void speedSensorUpdate();
 int readSpeed();
 
 //=====[#include guards - end]=================================================
