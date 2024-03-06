@@ -127,7 +127,7 @@ static bool debounceRightInput(){
     switch( buttonStateRight ) {
 
     case BUTTON_UP:
-        if( leftTurnSignal ) {
+        if( rightTurnSignal ) {
             buttonStateRight = BUTTON_FALLING;
             timeElap = 0;
         }
@@ -135,7 +135,7 @@ static bool debounceRightInput(){
 
     case BUTTON_FALLING:
         if( timeElap >= DEBOUNCE_TIME ) {
-            if( leftTurnSignal ) {
+            if( rightTurnSignal ) {
                 buttonStateRight = BUTTON_DOWN;
             } else {
                 buttonStateRight = BUTTON_UP;
@@ -153,7 +153,7 @@ static bool debounceRightInput(){
 
     case BUTTON_RISING:
         if( timeElap >= DEBOUNCE_TIME ) {
-            if( !leftTurnSignal ) {
+            if( !rightTurnSignal ) {
                 buttonStateRight = BUTTON_UP;
                 rightButtonReleasedEvent = true;
             } else {
