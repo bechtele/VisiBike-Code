@@ -36,6 +36,7 @@ void smartbikesystemInit(){
     userInterfaceInit();
     speedSensorInit();
     ledDriverInit();
+    brakeLightInit();
 }
 
 void smartbikesystemUpdate(){
@@ -43,7 +44,8 @@ void smartbikesystemUpdate(){
     turnSignalUpdate();
     speedSensorUpdate();
     ledDriverUpdate();
-}
+    shittyBrakeLightDisplay();
+ }
 
 //=====[Implementations of private functions]==================================
 
