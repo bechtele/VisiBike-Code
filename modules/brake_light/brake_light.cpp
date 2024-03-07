@@ -1,13 +1,14 @@
 //=====[Libraries]=============================================================
 #include "arm_book_lib.h"
 #include "brake_light.h"
+#include "led_driver.h"
 
 //=====[Declaration of private defines]========================================
 
 //=====[Declaration of private data types]=====================================
 
-DigitalIn leftBrakeButton(D4);
-DigitalIn rightBrakeButton(D3);
+DigitalIn leftBrakeButton(PG_0);
+DigitalIn rightBrakeButton(PD_1);
 
 //=====[Declaration and initialization of public global objects]===============
 
@@ -26,6 +27,12 @@ void brakeLightInit() {
 }
 
 bool brakeLightUpdate() {
-    return leftBrakeButton || rightBrakeButton;
+    bool brakeLightStatus = leftBrakeButton || rightBrakeButton;
+    if (brakeLightStatus) {
+        brakeLightOn();
+    } else {
+        brakeLightOff();
+    }
+    return brakeLightStatus;
 }
 //=====[Implementations of private functions]==================================

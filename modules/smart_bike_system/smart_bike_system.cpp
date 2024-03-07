@@ -9,6 +9,7 @@
 #include "turn_signal.h"
 #include "user_interface.h"
 #include "user_interface/user_interface.h"
+#include "led_driver.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -34,12 +35,14 @@ void smartbikesystemInit(){
     turnSignalInit();
     userInterfaceInit();
     speedSensorInit();
+    ledDriverInit();
 }
 
 void smartbikesystemUpdate(){
     userInterfaceUpdate();
     turnSignalUpdate();
     speedSensorUpdate();
+    ledDriverUpdate();
 }
 
 //=====[Implementations of private functions]==================================
