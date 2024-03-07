@@ -7,11 +7,12 @@
 
 //=====[Declaration of private data types]=====================================
 
-DigitalIn leftBrakeButton(PG_0);
-DigitalIn rightBrakeButton(PD_1);
+DigitalIn leftBrakeButton(PC_8);
+DigitalIn rightBrakeButton(PC_9);
 
 //=====[Declaration and initialization of public global objects]===============
 
+UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
@@ -34,5 +35,14 @@ bool brakeLightUpdate() {
         brakeLightOff();
     }
     return brakeLightStatus;
+}
+
+void shittyBrakeLightDisplay() {
+            if(leftBrakeButton) {
+                uartUsb.write("leftBrake\n", 10);
+            }
+            if(rightBrakeButton) {
+                uartUsb.write("rightBrake\n", 11);
+            }
 }
 //=====[Implementations of private functions]==================================

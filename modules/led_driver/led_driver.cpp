@@ -33,13 +33,13 @@ void ledDriverUpdate() {
 
     if (leftTurnSignal) {
         turnSignalLineOne = ON;
-        turnSignalLineOne = OFF;
+        turnSignalLineTwo = OFF;
     } else if (rightTurnSignal) {
         turnSignalLineOne = OFF;
-        turnSignalLineOne = ON;
+        turnSignalLineTwo = ON;
     } else {
         turnSignalLineOne = OFF;
-        turnSignalLineOne = OFF;
+        turnSignalLineTwo = OFF;
     }
 }
 
@@ -63,5 +63,5 @@ void rightTurnSignalOn() {
 
 void turnSignalsOff() {
     rightTurnSignal = OFF;
-    leftTurnSignal = ON;
+    leftTurnSignal = OFF ;
 }

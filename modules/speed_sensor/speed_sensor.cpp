@@ -17,7 +17,7 @@ typedef enum {
     BUTTON_RISING
 } reedState_t;
 
-UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
+
 //=====[Declaration and initialization of public global objects]===============
 
 //=====[Declaration of external public global variables]=======================
@@ -36,17 +36,7 @@ void speedSensorInit() {
 }
 
 void speedSensorUpdate() {
-    static bool asdf = false;
-    if (debounceReedInput()) {
-            if(asdf) {
-                uartUsb.write("Input<>\n", 8);
-                asdf = !asdf;
-            }
-            else {
-                uartUsb.write("Input[]\n", 8);
-                asdf=!asdf;
-            }
-    }
+    
 }
 
 int readSpeed() {
