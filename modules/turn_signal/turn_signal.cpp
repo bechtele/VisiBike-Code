@@ -4,6 +4,7 @@
 #include "mbed.h"
 #include "arm_book_lib.h"
 #include "smart_bike_system.h"
+#include "led_driver.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -34,8 +35,8 @@ buttonState_t buttonStateRight = BUTTON_UP;
 //=====[Declaration and initialization of private global variables]============
 
 //only one should be true at any time
-bool leftBlinkerOn = false;
-bool rightBlinkerOn = false;
+bool leftBlinker = OFF;
+bool rightBlinker = OFF;
 
 //=====[Declarations (prototypes) of private functions]========================
 
@@ -47,11 +48,11 @@ static bool debounceRightInput();
 //=====[Implementations of public functions]===================================
 
 bool readLeftTurnSignal(){ //Replace with FSM to debounce 
-    return leftBlinkerOn;
+    return leftBlinker;
 }
 
 bool readRightTurnSignal(){
-    return rightBlinkerOn;
+    return rightBlinker;
 }
 
 void turnSignalInit(){
@@ -61,16 +62,25 @@ void turnSignalInit(){
 
 void turnSignalUpdate() {
     if (debounceLeftInput()) {
-        leftBlinkerOn = !leftBlinkerOn;
-        if (leftBlinkerOn == true) {
-            rightBlinkerOn = false;
+        leftBlinker = !leftBlinker;
+        if (leftBlinker == ON) {
+            rightBlinker = OFF;
         }
     }
     if (debounceRightInput()) {
-        rightBlinkerOn = !rightBlinkerOn;
-        if (rightBlinkerOn == true) {
-            leftBlinkerOn = false;
+        rightBlinker = !rightBlinker;
+        if (rightBlinker == ON) {
+            leftBlinker = OFF;
         }
+    }
+    if (leftBlinker) {
+        leftTurnSignalOn();
+    }
+    else if (rightBlinker) {
+        rightTurnSignalOn();
+    }
+    else {
+        turnSignalsOff();
     }
 }
 
