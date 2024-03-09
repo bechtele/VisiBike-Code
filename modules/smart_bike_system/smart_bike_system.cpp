@@ -44,6 +44,7 @@ void smartbikesystemUpdate(){
     turnSignalUpdate();
     speedSensorUpdate();
     ledDriverUpdate();
+    
     //shittyBrakeLightDisplay();
  }
 
