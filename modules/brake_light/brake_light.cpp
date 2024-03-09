@@ -12,7 +12,7 @@ DigitalIn rightBrakeButton(PC_9);
 
 //=====[Declaration and initialization of public global objects]===============
 
-UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
+
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
@@ -23,8 +23,8 @@ UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 //=====[Implementations of public functions]===================================
 void brakeLightInit() {
-    leftBrakeButton.mode(PullUp);
-    rightBrakeButton.mode(PullUp);
+    leftBrakeButton.mode(PullDown);
+    rightBrakeButton.mode(PullDown);
 }
 
 bool brakeLightUpdate() {
@@ -37,6 +37,7 @@ bool brakeLightUpdate() {
     return brakeLightStatus;
 }
 
+/*
 void shittyBrakeLightDisplay() {
             if(leftBrakeButton) {
                 uartUsb.write("leftBrake\n", 10);
@@ -45,4 +46,5 @@ void shittyBrakeLightDisplay() {
                 uartUsb.write("rightBrake\n", 11);
             }
 }
+*/
 //=====[Implementations of private functions]==================================

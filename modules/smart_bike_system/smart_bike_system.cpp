@@ -44,7 +44,7 @@ void smartbikesystemUpdate(){
     turnSignalUpdate();
     speedSensorUpdate();
     ledDriverUpdate();
-    shittyBrakeLightDisplay();
+    //shittyBrakeLightDisplay();
  }
 
 //=====[Implementations of private functions]==================================

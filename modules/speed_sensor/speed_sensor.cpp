@@ -7,6 +7,8 @@
 //=====[Declaration of private defines]========================================
 #define DEBOUNCE_TIME 10
 
+UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
+
 //=====[Declaration of private data types]=====================================
 DigitalIn reedSwitchSensor(PF_7);
 
@@ -36,7 +38,9 @@ void speedSensorInit() {
 }
 
 void speedSensorUpdate() {
-    
+    if(debounceReedInput()){
+        uartUsb.write("Click- ", 7);
+    }
 }
 
 int readSpeed() {
