@@ -4,11 +4,15 @@
 #include "arm_book_lib.h"
 #include "display.h"
 #include "brake_light.h"
+#include "speed_sensor.h"
+#include "string.h"
 
 #include "user_interface.h"
 #include "turn_signal.h"
 
 //=====[Declaration of private defines]========================================
+
+UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 
 //=====[Declaration of private data types]=====================================
@@ -45,7 +49,7 @@ void userInterfaceUpdate() {
 static void LCDInit(){
     //Position of SPEED: 
     displayCharPositionWrite(0,0);
-    displayStringWrite("SPEED:   MPH");
+    displayStringWrite("SPEED:     MPH");
 
     //TURN SIGNAL
     displayCharPositionWrite(0,1);
@@ -57,9 +61,16 @@ static void LCDInit(){
 }
 
 static void LCDUpdate(){
+
+
     //Update Speed
     displayCharPositionWrite(7,0);
-    displayStringWrite("99");
+    float speed = readSpeed();
+    char forString[5] = "";
+    sprintf(forString, "", "%.1f", speed);
+    uartUsb.write(forString, 5);
+
+    displayStringWrite("");
 
     //Update Turn Signal
     displayCharPositionWrite(3,1);

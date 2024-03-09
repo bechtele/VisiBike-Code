@@ -3,11 +3,12 @@
 #include "arm_book_lib.h"
 #include "mbed.h"
 #include "smart_bike_system.h"
+#include <cstdint>
 
 //=====[Declaration of private defines]========================================
 #define DEBOUNCE_TIME 10
+#define INTEGER_MAX 9999;
 
-UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 //=====[Declaration of private data types]=====================================
 DigitalIn reedSwitchSensor(PF_7);
@@ -29,23 +30,59 @@ typedef enum {
 //=====[Declaration and initialization of private global variables]============
 static reedState_t reedState = BUTTON_UP;
 static bool reedStateBoolean = false;
+
+Timer sensorTimer; //Timer that will continuously run
+
+uint32_t lastTriggerTime = 0; 
+
+float storeSpeed[3];
+
 //=====[Declarations (prototypes) of private functions]========================
 static bool debounceReedInput();
 
 //=====[Implementations of public functions]===================================
 void speedSensorInit() {
     reedSwitchSensor.mode(PullDown);
+    sensorTimer.start();
 }
 
 void speedSensorUpdate() {
-    if(debounceReedInput()){
-        uartUsb.write("Click- ", 7);
+    if (debounceReedInput()) {
+        float currentSpeed;
+        uint32_t timeDifference = 0;
+        // Get the current time
+        uint32_t currentTime = sensorTimer.read_ms();
+        timeDifference = currentTime - lastTriggerTime;
+
+            // Update the last trigger time
+        lastTriggerTime = currentTime;
+
+            // Now 'timeDifference' holds the time elapsed since the last trigger
+
+        currentSpeed = (1.0/timeDifference)*4283.98;
+
+        static int index = 0;
+        storeSpeed[index%3] = currentSpeed;
+        index++;
+
+        if(sensorTimer.read_ms() >= 3600000){
+        sensorTimer.reset();
+        sensorTimer.start();
+        lastTriggerTime = 0;
+
+        if(index == 9999){
+            index = 0;
+        }
+
+        }    
+
     }
 }
 
-int readSpeed() {
-    return -1;
+float readSpeed(){
+   return  (storeSpeed[0] + storeSpeed[1] + storeSpeed[2])/3;
 }
+
 //=====[Implementations of private functions]==================================
 
 static bool debounceReedInput(){

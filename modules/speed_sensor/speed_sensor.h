@@ -11,7 +11,7 @@
 
 void speedSensorInit();
 void speedSensorUpdate();
-int readSpeed();
+float readSpeed();
 
 //=====[#include guards - end]=================================================
 
