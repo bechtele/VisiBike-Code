@@ -49,7 +49,7 @@ void userInterfaceUpdate() {
 static void LCDInit(){
     //Position of SPEED: 
     displayCharPositionWrite(0,0);
-    displayStringWrite("SPEED:     MPH");
+    displayStringWrite("SPEED: 00.0 MPH");
 
     //TURN SIGNAL
     displayCharPositionWrite(0,1);
@@ -65,12 +65,16 @@ static void LCDUpdate(){
 
     //Update Speed
     displayCharPositionWrite(7,0);
-    float speed = readSpeed();
-    char forString[5] = "";
-    sprintf(forString, "", "%.1f", speed);
-    uartUsb.write(forString, 5);
-
-    displayStringWrite("");
+    int speed = (int)(readSpeed()*10);
+    int rightDecimal = speed%10;
+    int leftDecimal = (speed-rightDecimal)/10;
+    char buffer[7];
+    if (leftDecimal < 10) {
+        sprintf(buffer, "0%d.%d", leftDecimal, rightDecimal);
+    } else{
+        sprintf(buffer, "%d.%d", leftDecimal, rightDecimal);
+    }
+    displayStringWrite(buffer);
 
     //Update Turn Signal
     displayCharPositionWrite(3,1);
