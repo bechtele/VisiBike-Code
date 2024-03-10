@@ -7,7 +7,8 @@
 
 //=====[Declaration of private defines]========================================
 #define DEBOUNCE_TIME 10
-#define INTEGER_MAX 9999;
+#define NUMBER_OF_AVGS 3
+#define TIMER_MAX 1000000
 
 
 //=====[Declaration of private data types]=====================================
@@ -31,11 +32,11 @@ typedef enum {
 static reedState_t reedState = BUTTON_UP;
 static bool reedStateBoolean = false;
 
-Timer sensorTimer; //Timer that will continuously run
+Timer sensorTimer;
 
 uint32_t lastTriggerTime = 0; 
 
-float storeSpeed[3];
+float storeSpeed[NUMBER_OF_AVGS];
 
 //=====[Declarations (prototypes) of private functions]========================
 static bool debounceReedInput();
@@ -44,43 +45,50 @@ static bool debounceReedInput();
 void speedSensorInit() {
     reedSwitchSensor.mode(PullDown);
     sensorTimer.start();
-}
-
-void speedSensorUpdate() {
-    if (debounceReedInput()) {
-        float currentSpeed;
-        uint32_t timeDifference = 0;
-        // Get the current time
-        uint32_t currentTime = sensorTimer.read_ms();
-        timeDifference = currentTime - lastTriggerTime;
-
-            // Update the last trigger time
-        lastTriggerTime = currentTime;
-
-            // Now 'timeDifference' holds the time elapsed since the last trigger
-
-        currentSpeed = (1.0/timeDifference)*4283.98;
-
-        static int index = 0;
-        storeSpeed[index%3] = currentSpeed;
-        index++;
-
-        if(sensorTimer.read_ms() >= 3600000){
-        sensorTimer.reset();
-        sensorTimer.start();
-        lastTriggerTime = 0;
-
-        if(index == 9999){
-            index = 0;
-        }
-
-        }    
-
+    for (int i=0; i<NUMBER_OF_AVGS; i++) {
+        storeSpeed[i]=0;
     }
 }
 
+void speedSensorUpdate() {
+
+    if (debounceReedInput()) {
+        float currentSpeed;
+        uint32_t timeDifference;
+        uint32_t currentTime = sensorTimer.read_ms(); // Get the current time
+        timeDifference = currentTime - lastTriggerTime;
+        lastTriggerTime = currentTime; // Update the last trigger time
+        currentSpeed = (1.0/timeDifference)*4283.99;
+
+        static int index = 0;
+        storeSpeed[index%NUMBER_OF_AVGS] = currentSpeed;
+        index++;
+
+        if(sensorTimer.read_ms() >= TIMER_MAX){
+            sensorTimer.reset();
+            lastTriggerTime = 0;
+        }
+
+        if(index == INT16_MAX){
+            index = 0;
+        }
+
+    } else{
+        if (sensorTimer.read_ms()-lastTriggerTime>10000){
+            for (int i=0; i<NUMBER_OF_AVGS; i++) {
+                storeSpeed[i]=0;
+            }
+        }
+    }
+
+}
+
 float readSpeed(){
-   return  (storeSpeed[0] + storeSpeed[1] + storeSpeed[2])/3;
+    float totalSpeed=0;
+    for (int i=0; i<NUMBER_OF_AVGS; i++) {
+        totalSpeed += storeSpeed[i];
+    }
+    return  totalSpeed/NUMBER_OF_AVGS;
 }
 
 //=====[Implementations of private functions]==================================
