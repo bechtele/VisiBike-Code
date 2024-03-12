@@ -7,8 +7,9 @@
 #include "led_driver.h"
 
 //=====[Declaration of private defines]========================================
-
 #define DEBOUNCE_TIME 30
+#define BLINK_TIME 100
+#define TIME_ELAP_RESET 0 
 
 
 //=====[Declaration of private data types]=====================================
@@ -42,6 +43,8 @@ bool rightBlinker = OFF;
 
 static bool debounceLeftInput();
 static bool debounceRightInput();
+static int toggleLeftBlinker(int timeElap);
+static int toggleRightBlinker(int timeElap);
 
 
 
@@ -61,6 +64,8 @@ void turnSignalInit(){
 }
 
 void turnSignalUpdate() {
+    static int timeElap = 0;
+    static bool blinkState = OFF;
     if (debounceLeftInput()) {
         leftBlinker = !leftBlinker;
         if (leftBlinker == ON) {
@@ -74,14 +79,15 @@ void turnSignalUpdate() {
         }
     }
     if (leftBlinker) {
-        leftTurnSignalOn();
+        timeElap = toggleLeftBlinker(timeElap);
     }
     else if (rightBlinker) {
-        rightTurnSignalOn();
+        timeElap = toggleRightBlinker(timeElap);
     }
     else {
         turnSignalsOff();
     }
+    timeElap += TIME_INCREMENT_MS;
 }
 
 //=====[Implementations of private functions]==================================
@@ -173,4 +179,48 @@ static bool debounceRightInput(){
         break;
     }
     return rightButtonReleasedEvent;
+}
+
+static int toggleLeftBlinker(int timeElap) {
+    static bool blinkState = OFF;
+    if (blinkState == ON) {//the blinker is on and needs to be toggled off
+            if (timeElap>=BLINK_TIME) {
+                turnSignalsOff();
+                blinkState = !blinkState;
+                return TIME_ELAP_RESET;
+            } else {//time is not up
+                return timeElap;
+            }
+    } 
+    else { // the blinker is off and needs to be toggled on
+            if (timeElap>=BLINK_TIME) {
+                leftTurnSignalOn();
+                blinkState = !blinkState;
+                return TIME_ELAP_RESET;
+            } else {//time is not up
+                return timeElap;
+            }
+    }
+}
+
+static int toggleRightBlinker(int timeElap) {
+    static bool blinkState = OFF;
+    if (blinkState == ON) {//the blinker is on and needs to be toggled off
+            if (timeElap>=BLINK_TIME) {
+                turnSignalsOff();
+                blinkState = !blinkState;
+                return TIME_ELAP_RESET;
+            } else {//time is not up
+                return timeElap;
+            }
+    } 
+    else { // the blinker is off and needs to be toggled on
+            if (timeElap>=BLINK_TIME) {
+                rightTurnSignalOn();
+                blinkState = !blinkState;
+                return TIME_ELAP_RESET;
+            } else {//time is not up
+                return timeElap;
+            }
+    }
 }

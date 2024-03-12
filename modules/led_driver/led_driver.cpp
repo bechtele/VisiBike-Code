@@ -5,7 +5,7 @@
 #include "smart_bike_system.h"
 
 //=====[Declaration of private defines]========================================
-#define TURN_SIGNAL_MS 500;
+
 //=====[Declaration of private data types]=====================================
 
 //=====[Declaration and initialization of public global objects]===============

@@ -1,4 +1,4 @@
-//=====[#include guards - begin]===============================================
+//=====[#include guards - begin]==============================================
 
 #ifndef _SPEED_SENSOR_H_
 #define _SPEED_SENSOR_H_
