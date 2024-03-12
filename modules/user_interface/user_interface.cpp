@@ -29,25 +29,13 @@ UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
 //=====[Declarations (prototypes) of private functions]========================
 static void displaySystemInit();
-static void LCDUpdate();
-static void LCDInit();
+static void turnSignalDisplay();
+static void speedometerDisplay();
+static void brakeDisplay();
 
 //=====[Implementations of public functions]===================================
 
 void userInterfaceInit() {
-    LCDInit();
-}
-
-void userInterfaceUpdate() {
-    LCDUpdate();
-    turnSignalUpdate();
-}
-
-
-//=====[Implementations of private functions]==================================
-
-//sets up the lcd display for what we intend to display
-static void LCDInit(){
     //Position of SPEED: 
     displayCharPositionWrite(0,0);
     displayStringWrite("SPEED: 00.0 MPH");
@@ -61,12 +49,29 @@ static void LCDInit(){
     displayStringWrite("BRK:");
 }
 
-//displays all of our data on the lcd
-static void LCDUpdate(){
+void userInterfaceUpdate() {
+    turnSignalDisplay();
+    speedometerDisplay();
+    brakeDisplay();
+}
 
 
-    //Update Speed
-    displayCharPositionWrite(7,0);
+//=====[Implementations of private functions]==================================
+
+static void turnSignalDisplay() {
+     displayCharPositionWrite(3,1);
+    if(readLeftTurnSignal()){
+        displayStringWrite("LEFT ");
+    }
+    else if(readRightTurnSignal()){
+        displayStringWrite("RIGHT");
+    } else {
+        displayStringWrite("OFF  ");
+    }
+}
+
+static void speedometerDisplay() {
+     displayCharPositionWrite(7,0);
     int speed = (int)(readSpeed()*10);
     int rightDecimal = speed%10;
     int leftDecimal = (speed-rightDecimal)/10;
@@ -77,20 +82,9 @@ static void LCDUpdate(){
         sprintf(buffer, "%d.%d", leftDecimal, rightDecimal);
     }
     displayStringWrite(buffer);
+}
 
-    //Update Turn Signal
-    displayCharPositionWrite(3,1);
-    if(readLeftTurnSignal()){
-        displayStringWrite("LEFT ");
-    }
-    else if(readRightTurnSignal()){
-        displayStringWrite("RIGHT");
-    } else {
-        displayStringWrite("OFF  ");
-    }
-    //displayStringWrite()
-
-    //Update Brake
+static void brakeDisplay() {
     displayCharPositionWrite(13,1);
     if(brakeLightUpdate()){
         displayStringWrite("ON ");
@@ -98,5 +92,4 @@ static void LCDUpdate(){
     else{
         displayStringWrite("OFF");
     }
-
 }
