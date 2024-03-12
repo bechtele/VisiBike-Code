@@ -50,7 +50,7 @@ static int toggleRightBlinker(int timeElap);
 
 //=====[Implementations of public functions]===================================
 
-bool readLeftTurnSignal(){ //Replace with FSM to debounce 
+bool readLeftTurnSignal(){
     return leftBlinker;
 }
 
@@ -63,6 +63,7 @@ void turnSignalInit(){
     rightTurnSignal.mode(PullDown);
 }
 
+// updates the variables that track the state of the blinkers and runs the functions that trigger the blinker leds
 void turnSignalUpdate() {
     static int timeElap = 0;
     static bool blinkState = OFF;
@@ -92,6 +93,7 @@ void turnSignalUpdate() {
 
 //=====[Implementations of private functions]==================================
 
+//fsm to debounce left turn signal button
 static bool debounceLeftInput(){
     bool leftButtonReleasedEvent = false;
     static int timeElap = 0;
@@ -136,6 +138,7 @@ static bool debounceLeftInput(){
     return leftButtonReleasedEvent;
 }
 
+//fsm to debounce right turn signal button
 static bool debounceRightInput(){
     bool rightButtonReleasedEvent = false;
     static int timeElap = 0;
@@ -181,6 +184,7 @@ static bool debounceRightInput(){
     return rightButtonReleasedEvent;
 }
 
+//makes the left turn signal led blink on and off
 static int toggleLeftBlinker(int timeElap) {
     static bool blinkState = OFF;
     if (blinkState == ON) {//the blinker is on and needs to be toggled off
@@ -203,6 +207,7 @@ static int toggleLeftBlinker(int timeElap) {
     }
 }
 
+//makes the right turn signal led blink on and off
 static int toggleRightBlinker(int timeElap) {
     static bool blinkState = OFF;
     if (blinkState == ON) {//the blinker is on and needs to be toggled off
