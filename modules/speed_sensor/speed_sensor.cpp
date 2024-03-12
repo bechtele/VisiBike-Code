@@ -46,14 +46,15 @@ static bool debounceReedInput();
 void speedSensorInit() {
     reedSwitchSensor.mode(PullDown);
     sensorTimer.start();
-    for (int i=0; i<NUMBER_OF_AVGS; i++) {
+    for (int i=0; i<NUMBER_OF_AVGS; i++) { // initializes the array with zeros (good coding practice)
         storeSpeed[i]=0;
     }
 }
 
+//this updates the storeSpeed array with the values from the speed sensor
 void speedSensorUpdate() {
 
-    if (debounceReedInput()) {
+    if (debounceReedInput()) { //sensor input detected
         float currentSpeed;
         uint32_t timeDifference;
         uint32_t currentTime = sensorTimer.read_ms(); // Get the current time
@@ -62,21 +63,21 @@ void speedSensorUpdate() {
         currentSpeed = (1.0/timeDifference)*4283.99;
 
         static int index = 0;
-        storeSpeed[index%NUMBER_OF_AVGS] = currentSpeed;
+        storeSpeed[index%NUMBER_OF_AVGS] = currentSpeed; //store current speed
         index++;
 
-        if(sensorTimer.read_ms() >= TIMER_MAX){
+        if(sensorTimer.read_ms() >= TIMER_MAX){ //protection from the timer variables overflowing
             sensorTimer.reset();
             lastTriggerTime = 0;
         }
 
-        if(index == INT16_MAX){
+        if(index == INT16_MAX){ // protection from the index variable from overflowing
             index = 0;
         }
 
-    } else{
-        if (sensorTimer.read_ms()-lastTriggerTime>TIME_TIL_SPEED_RESET){
-            for (int i=0; i<NUMBER_OF_AVGS; i++) {
+    } else{ // no sensor input detected
+        if (sensorTimer.read_ms()-lastTriggerTime>TIME_TIL_SPEED_RESET){ //if the system goes too long with out sensor input set speed to zero
+            for (int i=0; i<NUMBER_OF_AVGS; i++) { 
                 storeSpeed[i]=0;
             }
         }
@@ -84,6 +85,7 @@ void speedSensorUpdate() {
 
 }
 
+//get the values from the speed array and average them
 float readSpeed(){
     float totalSpeed=0;
     for (int i=0; i<NUMBER_OF_AVGS; i++) {
@@ -94,8 +96,9 @@ float readSpeed(){
 
 //=====[Implementations of private functions]==================================
 
+//fsm to debounce sensor input
 static bool debounceReedInput(){
-    bool leftButtonReleasedEvent = false;
+    bool sensorFallingEvent = false;
     static int timeElap = 0;
     switch( reedState ) {
 
@@ -127,7 +130,7 @@ static bool debounceReedInput(){
         if( timeElap >= DEBOUNCE_TIME ) {
             if( !reedSwitchSensor ) {
                 reedState = BUTTON_UP;
-                leftButtonReleasedEvent = true;
+                sensorFallingEvent = true;
             } else {
                 reedState = BUTTON_DOWN;
             }
@@ -135,5 +138,5 @@ static bool debounceReedInput(){
         timeElap = timeElap + TIME_INCREMENT_MS;
         break;
     }
-    return leftButtonReleasedEvent;
+    return sensorFallingEvent;
 }
