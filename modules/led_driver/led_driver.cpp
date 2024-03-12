@@ -25,12 +25,11 @@ static bool rightTurnSignal = OFF;
 
 //=====[Implementations of public functions]===================================
 void ledDriverInit() {
-
+    //reserved in case led_driver needs things initialized
 }
 
+//this updates the turn signal leds based on the turn signal variables
 void ledDriverUpdate() {
-    static int timeElap = 0;
-
     if (leftTurnSignal) {
         turnSignalLineOne = ON;
         turnSignalLineTwo = OFF;
