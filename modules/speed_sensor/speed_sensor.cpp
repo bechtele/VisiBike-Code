@@ -1,4 +1,4 @@
-//=====[Libraries]=============================================================
+//=====[Libraries]============================================================
 #include "speed_sensor.h"
 #include "arm_book_lib.h"
 #include "mbed.h"
@@ -9,6 +9,7 @@
 #define DEBOUNCE_TIME 10
 #define NUMBER_OF_AVGS 3
 #define TIMER_MAX 1000000
+#define TIME_TIL_SPEED_RESET 5000
 
 
 //=====[Declaration of private data types]=====================================
@@ -74,7 +75,7 @@ void speedSensorUpdate() {
         }
 
     } else{
-        if (sensorTimer.read_ms()-lastTriggerTime>10000){
+        if (sensorTimer.read_ms()-lastTriggerTime>TIME_TIL_SPEED_RESET){
             for (int i=0; i<NUMBER_OF_AVGS; i++) {
                 storeSpeed[i]=0;
             }
