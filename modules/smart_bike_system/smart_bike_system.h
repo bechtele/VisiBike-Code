@@ -4,7 +4,7 @@
 #define _SMART_BIKE_SYSTEM_H_
 
 //=====[Declaration of public defines]=========================================
-
+//the global time delay
 #define TIME_INCREMENT_MS 10
 //=====[Declaration of public data types]======================================
 
