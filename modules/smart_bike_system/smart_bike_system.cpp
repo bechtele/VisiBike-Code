@@ -17,8 +17,6 @@
 
 //=====[Declaration and initialization of public global objects]===============
 
-
-
 //=====[Declaration of external public global variables]=======================
 
 //=====[Declaration and initialization of public global variables]=============
@@ -30,6 +28,7 @@
 
 //=====[Implementations of public functions]===================================
 
+//calls all necessary init functions
 void smartbikesystemInit(){
     displayInit();
     turnSignalInit();
@@ -39,13 +38,12 @@ void smartbikesystemInit(){
     brakeLightInit();
 }
 
+//calls all update functions
 void smartbikesystemUpdate(){
     userInterfaceUpdate();
     turnSignalUpdate();
     speedSensorUpdate();
     ledDriverUpdate();
-    
-    //shittyBrakeLightDisplay();
  }
 
 //=====[Implementations of private functions]==================================
