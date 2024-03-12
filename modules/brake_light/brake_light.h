@@ -11,7 +11,6 @@
 
 void brakeLightInit();
 bool brakeLightUpdate();
-void shittyBrakeLightDisplay();
 
 //=====[#include guards - end]=================================================
 
