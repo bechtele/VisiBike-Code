@@ -46,6 +46,7 @@ void userInterfaceUpdate() {
 
 //=====[Implementations of private functions]==================================
 
+//sets up the lcd display for what we intend to display
 static void LCDInit(){
     //Position of SPEED: 
     displayCharPositionWrite(0,0);
@@ -60,6 +61,7 @@ static void LCDInit(){
     displayStringWrite("BRK:");
 }
 
+//displays all of our data on the lcd
 static void LCDUpdate(){
 
 
