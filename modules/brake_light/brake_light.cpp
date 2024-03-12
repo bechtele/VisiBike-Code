@@ -22,12 +22,13 @@ DigitalIn rightBrakeButton(PC_9);
 //=====[Declarations (prototypes) of private functions]========================
 
 //=====[Implementations of public functions]===================================
-void brakeLightInit() {
+void brakeLightInit() { 
     leftBrakeButton.mode(PullDown);
     rightBrakeButton.mode(PullDown);
 }
 
-bool brakeLightUpdate() {
+//This function turns the brake leds on or off depending on the state of the brake buttons
+bool brakeLightUpdate() { 
     bool brakeLightStatus = leftBrakeButton || rightBrakeButton;
     if (brakeLightStatus) {
         brakeLightOn();
@@ -36,15 +37,4 @@ bool brakeLightUpdate() {
     }
     return brakeLightStatus;
 }
-
-/*
-void shittyBrakeLightDisplay() {
-            if(leftBrakeButton) {
-                uartUsb.write("leftBrake\n", 10);
-            }
-            if(rightBrakeButton) {
-                uartUsb.write("rightBrake\n", 11);
-            }
-}
-*/
 //=====[Implementations of private functions]==================================
